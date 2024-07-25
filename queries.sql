@@ -1,8 +1,8 @@
+-- customers_count -- Запрос считает всех покупателей из таблицы customers
 select
     count(customer_id) as customers_count
 from
     customers;
--- customers_count Запрос выше считает всех покупателей из таблицы customers
 
 -- top_sellers
 -- Запрос возвращает 10 лучших (по выручке) продавцов,
@@ -34,7 +34,9 @@ limit 10;
 -- и сортирует результаты по возрастанию.
 select
     employees.first_name || ' ' || employees.last_name as seller,
-    floor(sum(sales.quantity * products.price) / count(sales.sales_id)) as average_income
+    floor(
+        sum(sales.quantity * products.price) / count(sales.sales_id)
+    ) as average_income
 from
     sales
 inner join employees
@@ -51,7 +53,9 @@ having
             floor(avg(total_income)) as avg_income
         from (
             select
-                sum(sales.quantity * products.price) / count(sales.sales_id) as total_income
+                sum(
+                    sales.quantity * products.price
+                ) / count(sales.sales_id) as total_income
             from
                 sales
             inner join employees
