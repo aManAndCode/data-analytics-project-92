@@ -14,9 +14,9 @@ select
     floor(sum(products.price * sales.quantity)) as income
 from
     sales
-inner join employees 
+inner join employees
     on sales.sales_person_id = employees.employee_id
-inner join products 
+inner join products
     on sales.product_id = products.product_id
 group by
     employees.employee_id,
@@ -37,9 +37,9 @@ select
     floor(sum(sales.quantity * products.price) / count(sales.sales_id)) as average_income
 from
     sales
-inner join employees 
+inner join employees
     on sales.sales_person_id = employees.employee_id
-inner join products 
+inner join products
     on sales.product_id = products.product_id
 group by
     employees.employee_id,
@@ -54,9 +54,9 @@ having
                 sum(sales.quantity * products.price) / count(sales.sales_id) as total_income
             from
                 sales
-            inner join employees 
+            inner join employees
                 on sales.sales_person_id = employees.employee_id
-            inner join products 
+            inner join products
                 on sales.product_id = products.product_id
             group by
                 employees.employee_id
@@ -76,9 +76,9 @@ select
     floor(sum(products.price * sales.quantity)) as income
 from
     sales
-inner join employees 
+inner join employees
     on sales.sales_person_id = employees.employee_id
-inner join products 
+inner join products
     on sales.product_id = products.product_id
 group by
     employees.first_name,
@@ -96,7 +96,7 @@ order by
 -- Запрос возвращает таблицу с количеством покупателей
 -- в разных возрастных группах, отсортированную по возрастным группам
 select
-    case 
+    case
         when age between 16 and 25 then '16-25'
         when age between 26 and 40 then '26-40'
         when age > 40 then '40+'
@@ -118,7 +118,7 @@ select
     floor(sum(products.price * sales.quantity)) as income
 from
     sales
-inner join products 
+inner join products
     on sales.product_id = products.product_id
 group by
     selling_month
@@ -135,12 +135,12 @@ with the_sales as (
         sales.sales_person_id,
         sales.product_id,
         row_number() over (
-            partition by sales.customer_id 
+            partition by sales.customer_id
             order by sales.sale_date, sales.sales_id
         ) as rank
     from
         sales
-    inner join products 
+    inner join products
         on sales.product_id = products.product_id
     where
         products.price = 0
@@ -165,9 +165,9 @@ select
     concat(employees.first_name, ' ', employees.last_name) as seller
 from
     first_sales
-inner join customers 
+inner join customers
     on first_sales.customer_id = customers.customer_id
-inner join employees 
+inner join employees
     on first_sales.sales_person_id = employees.employee_id
 order by
     customers.customer_id;
