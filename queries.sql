@@ -86,7 +86,7 @@ ORDER BY age_category;
 -- запрос находит количество уникальных покупателей и их выручку,
 -- группирует данные по дате и сортирует по дате по возрастанию
 SELECT 
-    TO_CHAR(sales.sale_date, 'YYYY-MM') AS date,
+    TO_CHAR(sales.sale_date, 'YYYY-MM') AS selling_month,
     COUNT(DISTINCT sales.customer_id) AS total_customers,
     FLOOR(SUM(products.price * sales.quantity)) AS income
 FROM sales
