@@ -1,8 +1,8 @@
--- customers_count -- Запрос считает общее количество покупателей из таблицы customers
 select
     count(customer_id) as customers_count
 from
     customers;
+-- customers_count Запрос выше считает всех покупателей из таблицы customers
 
 -- top_sellers
 -- Запрос возвращает 10 лучших (по выручке) продавцов,
@@ -126,7 +126,8 @@ order by
     selling_month;
 
 -- special_offer
--- Запрос найдёт покупателей, совершивших (самую) первую покупку с ценой равной нулю
+-- Запрос найдёт покупателей,
+-- совершивших (самую) первую покупку с ценой равной нулю
 -- и отсортирует по id покупателя
 with the_sales as (
     select
