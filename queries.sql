@@ -1,8 +1,5 @@
 -- customers_count -- Запрос считает всех покупателей из таблицы customers
-select
-    count(customer_id) as customers_count
-from
-    customers;
+select count(customer_id) as customers_count from customers;
 
 -- top_sellers
 -- Запрос возвращает 10 лучших (по выручке) продавцов,
