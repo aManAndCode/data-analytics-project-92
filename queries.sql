@@ -14,8 +14,10 @@ select
     floor(sum(products.price * sales.quantity)) as income
 from
     sales
-    inner join employees on sales.sales_person_id = employees.employee_id
-    inner join products on sales.product_id = products.product_id
+inner join employees 
+    on sales.sales_person_id = employees.employee_id
+inner join products 
+    on sales.product_id = products.product_id
 group by
     employees.employee_id,
     employees.first_name,
@@ -35,8 +37,10 @@ select
     floor(sum(sales.quantity * products.price) / count(sales.sales_id)) as average_income
 from
     sales
-inner join employees on sales.sales_person_id = employees.employee_id
-inner join products on sales.product_id = products.product_id
+inner join employees 
+    on sales.sales_person_id = employees.employee_id
+inner join products 
+    on sales.product_id = products.product_id
 group by
     employees.employee_id,
     employees.first_name,
@@ -50,8 +54,10 @@ having
                 sum(sales.quantity * products.price) / count(sales.sales_id) as total_income
             from
                 sales
-            inner join employees on sales.sales_person_id = employees.employee_id
-            inner join products on sales.product_id = products.product_id
+            inner join employees 
+                on sales.sales_person_id = employees.employee_id
+            inner join products 
+                on sales.product_id = products.product_id
             group by
                 employees.employee_id
         ) as subquery
@@ -70,8 +76,10 @@ select
     floor(sum(products.price * sales.quantity)) as income
 from
     sales
-inner join employees on sales.sales_person_id = employees.employee_id
-inner join products on sales.product_id = products.product_id
+inner join employees 
+    on sales.sales_person_id = employees.employee_id
+inner join products 
+    on sales.product_id = products.product_id
 group by
     employees.first_name,
     employees.last_name,
@@ -110,7 +118,8 @@ select
     floor(sum(products.price * sales.quantity)) as income
 from
     sales
-inner join products on sales.product_id = products.product_id
+inner join products 
+    on sales.product_id = products.product_id
 group by
     selling_month
 order by
@@ -125,10 +134,14 @@ with the_sales as (
         sales.sale_date,
         sales.sales_person_id,
         sales.product_id,
-        row_number() over (partition by sales.customer_id order by sales.sale_date, sales.sales_id) as rank
+        row_number() over (
+            partition by sales.customer_id 
+            order by sales.sale_date, sales.sales_id
+        ) as rank
     from
         sales
-    inner join products on sales.product_id = products.product_id
+    inner join products 
+        on sales.product_id = products.product_id
     where
         products.price = 0
 ),
@@ -146,13 +159,15 @@ first_sales as (
 )
 
 select
-	customers.customer_id,
+    customers.customer_id,
     concat(customers.first_name, ' ', customers.last_name) as customer,
     first_sales.sale_date,
     concat(employees.first_name, ' ', employees.last_name) as seller
 from
     first_sales
-inner join customers on first_sales.customer_id = customers.customer_id
-inner join employees on first_sales.sales_person_id = employees.employee_id
+inner join customers 
+    on first_sales.customer_id = customers.customer_id
+inner join employees 
+    on first_sales.sales_person_id = employees.employee_id
 order by
     customers.customer_id;
