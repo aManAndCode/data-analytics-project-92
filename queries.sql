@@ -120,7 +120,7 @@ order by
 -- special_offer
 -- Запрос найдёт покупателей, совершивших (самую) первую покупку с ценой равной нулю
 -- и отсортирует по id покупателя
-with TheSales as (
+with the_sales as (
     select
         sales.customer_id,
         sales.sale_date,
@@ -133,24 +133,24 @@ with TheSales as (
     where
         products.price = 0
 ),
-FirstSales as (
+first_sales as (
     select
         customer_id,
         sale_date,
         sales_person_id,
         product_id
     from
-        TheSales
+        the_sales
     where
         rank = 1
 )
 select
     concat(customers.first_name, ' ', customers.last_name) as customer,
-    FirstSales.sale_date,
+    first_sales.sale_date,
     concat(employees.first_name, ' ', employees.last_name) as seller
 from
-    FirstSales
-    inner join customers on FirstSales.customer_id = customers.customer_id
-    inner join employees on FirstSales.sales_person_id = employees.employee_id
+    first_sales
+    inner join customers on first_sales.customer_id = customers.customer_id
+    inner join employees on first_sales.sales_person_id = employees.employee_id
 order by
     customers.customer_id;
