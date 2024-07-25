@@ -17,6 +17,7 @@ GROUP BY employees.employee_id, employees.first_name, employees.last_name
 ORDER BY income DESC
 LIMIT 10;
 
+-- lowest_average_income
 -- запрос ниже находит продавцов, чья средняя выручка за сделку
 -- меньше средней выручки всех продавцов,
 -- но сначала он вычисляет среднюю выручку за сделку для каждого продавца,
@@ -43,13 +44,14 @@ HAVING FLOOR(SUM(sales.quantity * products.price) / COUNT(sales.sales_id)) < (
 )
 ORDER BY average_income;
 
+-- day_of_the_week_income
 -- запрос возвращает данные о выручке по дням недели.
 -- Каждая запись содержит имя и фамилию продавца,
 -- день недели и суммарную выручку.
 -- Отсортирован по порядковому номеру дня недели и seller
 SELECT
     employees.first_name || ' ' || employees.last_name AS seller,
-    TO_CHAR(sales.sale_date, 'Day') AS day_of_week,
+    TO_CHAR(sales.sale_date, 'day') AS day_of_week,
     FLOOR(SUM(products.price * sales.quantity)) AS income
 FROM sales
 INNER JOIN employees ON sales.sales_person_id = employees.employee_id
@@ -57,14 +59,14 @@ INNER JOIN products ON sales.product_id = products.product_id
 GROUP BY
     employees.first_name,
     employees.last_name,
-    TO_CHAR(sales.sale_date, 'Day'),
+    TO_CHAR(sales.sale_date, 'day'),
     EXTRACT(DOW FROM sales.sale_date)
 ORDER BY
     (CASE
         WHEN EXTRACT(DOW FROM sales.sale_date) = 0 THEN 7
         ELSE EXTRACT(DOW FROM sales.sale_date)
     END),
-	seller;
+    seller;
 	
 -- age_groups
 -- запроас возвращает таблицу с количеством покупателей
@@ -75,7 +77,7 @@ SELECT
         WHEN age BETWEEN 26 AND 40 THEN '26-40'
         WHEN age > 40 THEN '40+'
     END AS age_category,
-    COUNT(*) AS count
+    COUNT(*) AS age_count
 FROM customers
 GROUP BY age_category
 ORDER BY age_category;
