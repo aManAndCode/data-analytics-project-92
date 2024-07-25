@@ -146,6 +146,7 @@ first_sales as (
 )
 
 select
+	customers.customer_id,
     concat(customers.first_name, ' ', customers.last_name) as customer,
     first_sales.sale_date,
     concat(employees.first_name, ' ', employees.last_name) as seller
