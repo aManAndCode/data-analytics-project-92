@@ -1,5 +1,4 @@
--- customers_count
--- Запрос считает общее количество покупателей из таблицы customers
+-- customers_count -- Запрос считает общее количество покупателей из таблицы customers
 select
     count(customer_id) as customers_count
 from
@@ -15,8 +14,8 @@ select
     floor(sum(products.price * sales.quantity)) as income
 from
     sales
-    inner join employees on sales.sales_person_id = employees.employee_id
-    inner join products on sales.product_id = products.product_id
+        inner join employees on sales.sales_person_id = employees.employee_id
+        inner join products on sales.product_id = products.product_id
 group by
     employees.employee_id,
     employees.first_name,
