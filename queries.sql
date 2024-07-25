@@ -160,7 +160,7 @@ first_sales as (
 )
 
 select
-	first_sales.sale_date,
+    first_sales.sale_date,
     concat(customers.first_name, ' ', customers.last_name) as customer,
     concat(employees.first_name, ' ', employees.last_name) as seller
 from
