@@ -46,8 +46,7 @@ group by
     employees.last_name
 having
     floor(sum(sales.quantity * products.price) / count(sales.sales_id)) < (
-        select
-            floor(avg(total_income)) as avg_income
+        select floor(avg(total_income)) as avg_income
         from (
             select
                 sum(
@@ -161,9 +160,8 @@ first_sales as (
 )
 
 select
-    customers.customer_id,
+	first_sales.sale_date,
     concat(customers.first_name, ' ', customers.last_name) as customer,
-    first_sales.sale_date,
     concat(employees.first_name, ' ', employees.last_name) as seller
 from
     first_sales
