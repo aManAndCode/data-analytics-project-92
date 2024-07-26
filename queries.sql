@@ -29,7 +29,7 @@ limit 10;
 -- и сортирует результаты по возрастанию.
 select
     employees.first_name || ' ' || employees.last_name as seller,
-    floor(avg (sales.quantity * products.price)) as average_income
+    floor(avg(sales.quantity * products.price)) as average_income
 from
     sales
 inner join employees
@@ -145,8 +145,8 @@ inner join customers
 inner join employees
     on first_sales.sales_person_id = employees.employee_id
 order by
-    customers.customer_id;   
-   
+    customers.customer_id;
+
 --вариант 1
 --with the_sales as (
 --    select
