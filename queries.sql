@@ -16,9 +16,7 @@ inner join employees
 inner join products
     on sales.product_id = products.product_id
 group by
-    employees.employee_id,
-    employees.first_name,
-    employees.last_name
+    employees.employee_id
 order by
     income desc
 limit 10;
@@ -31,9 +29,7 @@ limit 10;
 -- и сортирует результаты по возрастанию.
 select
     employees.first_name || ' ' || employees.last_name as seller,
-    floor(
-        sum(sales.quantity * products.price) / count(sales.sales_id)
-    ) as average_income
+    floor(avg (sales.quantity * products.price)) as average_income
 from
     sales
 inner join employees
@@ -54,8 +50,6 @@ having
                 ) / count(sales.sales_id) as total_income
             from
                 sales
-            inner join employees
-                on sales.sales_person_id = employees.employee_id
             inner join products
                 on sales.product_id = products.product_id
             group by
@@ -84,12 +78,9 @@ group by
     employees.first_name,
     employees.last_name,
     to_char(sales.sale_date, 'day'),
-    extract(dow from sales.sale_date)
+    extract(isodow from sales.sale_date)
 order by
-    (case
-        when extract(dow from sales.sale_date) = 0 then 7
-        else extract(dow from sales.sale_date)
-    end),
+    extract(isodow from sales.sale_date),
     seller;
 
 -- age_groups
@@ -129,45 +120,73 @@ order by
 -- Запрос найдёт покупателей,
 -- совершивших (самую) первую покупку с ценой равной нулю
 -- и отсортирует по id покупателя
-with the_sales as (
-    select
+-- вариант 2 (с использованием distinct on)
+select
+    first_sales.sale_date,
+    concat(customers.first_name, ' ', customers.last_name) as customer,
+    concat(employees.first_name, ' ', employees.last_name) as seller
+from (
+    select distinct on (sales.customer_id)
         sales.customer_id,
         sales.sale_date,
         sales.sales_person_id,
-        sales.product_id,
-        row_number() over (
-            partition by sales.customer_id
-            order by sales.sale_date, sales.sales_id
-        ) as rank
+        sales.product_id
     from
         sales
     inner join products
         on sales.product_id = products.product_id
     where
         products.price = 0
-),
-
-first_sales as (
-    select
-        customer_id,
-        sale_date,
-        sales_person_id,
-        product_id
-    from
-        the_sales
-    where
-        rank = 1
-)
-
-select
-    first_sales.sale_date,
-    concat(customers.first_name, ' ', customers.last_name) as customer,
-    concat(employees.first_name, ' ', employees.last_name) as seller
-from
-    first_sales
+    order by
+        sales.customer_id
+) as first_sales
 inner join customers
     on first_sales.customer_id = customers.customer_id
 inner join employees
     on first_sales.sales_person_id = employees.employee_id
 order by
-    customers.customer_id;
+    customers.customer_id;   
+   
+--вариант 1
+--with the_sales as (
+--    select
+--        sales.customer_id,
+--        sales.sale_date,
+--        sales.sales_person_id,
+--        sales.product_id,
+--        row_number() over (
+--            partition by sales.customer_id
+--            order by sales.sale_date
+--        ) as rank
+--    from
+--        sales
+--    inner join products
+--        on sales.product_id = products.product_id
+--    where
+--        products.price = 0
+--),
+--
+--first_sales as (
+--    select
+--        customer_id,
+--        sale_date,
+--        sales_person_id,
+--        product_id
+--    from
+--        the_sales
+--    where
+--        rank = 1
+--)
+--
+--select
+--    first_sales.sale_date,
+--    concat(customers.first_name, ' ', customers.last_name) as customer,
+--    concat(employees.first_name, ' ', employees.last_name) as seller
+--from
+--    first_sales
+--inner join customers
+--    on first_sales.customer_id = customers.customer_id
+--inner join employees
+--    on first_sales.sales_person_id = employees.employee_id
+--order by
+--    customers.customer_id;
