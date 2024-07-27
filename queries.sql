@@ -134,4 +134,3 @@ where
     products.price = 0
 order by
     sales.customer_id;
-
