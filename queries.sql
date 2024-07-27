@@ -41,13 +41,13 @@ group by
     employees.first_name,
     employees.last_name
 having
-    floor(sum(sales.quantity * products.price) / count(sales.sales_id)) < (
+    floor(
+    	avg(sales.quantity * products.price)
+    ) < (
         select floor(avg(total_income)) as avg_income
         from (
             select
-                sum(
-                    sales.quantity * products.price
-                ) / count(sales.sales_id) as total_income
+                avg(sales.quantity * products.price) as total_income
             from
                 sales
             inner join products
