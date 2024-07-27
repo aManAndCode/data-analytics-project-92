@@ -117,32 +117,24 @@ order by
 -- Запрос найдёт покупателей,
 -- совершивших (самую) первую покупку с ценой равной нулю
 -- и отсортирует по id покупателя
--- вариант 2 (с использованием distinct on)
+-- вариант 2.1 (с использованием distinct on / без подзапросов)
 select
-    first_sales.sale_date,
+    distinct on (sales.customer_id)
+    sales.sale_date,
     concat(customers.first_name, ' ', customers.last_name) as customer,
     concat(employees.first_name, ' ', employees.last_name) as seller
-from (
-    select distinct on (sales.customer_id)
-        sales.customer_id,
-        sales.sale_date,
-        sales.sales_person_id,
-        sales.product_id
-    from
-        sales
-    inner join products
-        on sales.product_id = products.product_id
-    where
-        products.price = 0
-    order by
-        sales.customer_id
-) as first_sales
+from
+    sales
+inner join products
+    on sales.product_id = products.product_id
 inner join customers
-    on first_sales.customer_id = customers.customer_id
+    on sales.customer_id = customers.customer_id
 inner join employees
-    on first_sales.sales_person_id = employees.employee_id
+    on sales.sales_person_id = employees.employee_id
+where
+    products.price = 0
 order by
-    customers.customer_id;
+    sales.customer_id;
 
 --вариант 1
 --with the_sales as (
