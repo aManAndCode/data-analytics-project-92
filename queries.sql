@@ -118,8 +118,7 @@ order by
 -- совершивших (самую) первую покупку с ценой равной нулю
 -- и отсортирует по id покупателя
 -- вариант 2.1 (с использованием distinct on / без подзапросов)
-select
-    distinct on (sales.customer_id)
+select distinct on (sales.customer_id)
     sales.sale_date,
     concat(customers.first_name, ' ', customers.last_name) as customer,
     concat(employees.first_name, ' ', employees.last_name) as seller
